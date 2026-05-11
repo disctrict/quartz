@@ -1,0 +1,28 @@
+@use "../../styles/variables.scss" as *;
+
+:root {
+  --root-band: #00ff44;
+  --band-active:#02f594; 
+  --band-idle: #19bd7b;
+  --root-musician: #8400ff;
+  --musician-active: #c800ff;
+  --musician-idle: #861da3;
+  --musician-label: #ff00f7;
+}
+
+.disctrict-graph {
+  & > h3 {
+    font-size: 1rem;
+    margin: 0;
+  }
+
+  & > .disctrict-graph-outer {
+    border-radius: 5px;
+    border: 1px solid var(--lightgray);
+    box-sizing: border-box;
+    height: 400px;
+    margin: 0.5em 0;
+    position: relative;
+    overflow: hidden;
+  }
+}

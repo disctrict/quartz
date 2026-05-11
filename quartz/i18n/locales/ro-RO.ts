@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Creat cu",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Graf",
     },

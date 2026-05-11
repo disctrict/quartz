@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Gemaakt met",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Grafiekweergave",
     },

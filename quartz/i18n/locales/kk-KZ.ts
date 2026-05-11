@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Құрастырылған құрал:",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Граф көрінісі",
     },

@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Створено за допомогою",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Вигляд графа",
     },

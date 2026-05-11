@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Creat amb",
     },
+    disctrictGraph: {
+      title: "Disctrict Gràfica",
+    },
     graph: {
       title: "Vista Gràfica",
     },

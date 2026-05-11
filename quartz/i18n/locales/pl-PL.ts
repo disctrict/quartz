@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Stworzone z użyciem",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Graf",
     },

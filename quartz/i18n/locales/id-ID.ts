@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Dibuat dengan",
     },
+    disctrictGraph: {
+      title: "Disctrict Grafik",
+    },
     graph: {
       title: "Tampilan Grafik",
     },

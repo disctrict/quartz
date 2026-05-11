@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Created with",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "关系图谱",
     },

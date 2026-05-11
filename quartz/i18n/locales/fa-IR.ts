@@ -39,6 +39,9 @@ export default {
     footer: {
       createdWith: "ساخته شده با",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "نمای گراف",
     },

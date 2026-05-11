@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Sukurta Su",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Grafiko Vaizdas",
     },

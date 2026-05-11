@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Készítve ezzel:",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Grafikonnézet",
     },

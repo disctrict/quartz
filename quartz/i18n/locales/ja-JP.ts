@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "作成",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "グラフビュー",
     },

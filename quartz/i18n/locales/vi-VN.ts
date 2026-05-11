@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Được tạo bằng",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Sơ đồ",
     },

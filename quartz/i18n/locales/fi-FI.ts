@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Luotu käyttäen",
     },
+    disctrictGraph: {
+      title: "Disctrict Verkkonäkymä",
+    },
     graph: {
       title: "Verkkonäkymä",
     },

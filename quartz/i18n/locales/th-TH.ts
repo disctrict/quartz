@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "สร้างด้วย",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "มุมมองกราฟ",
     },

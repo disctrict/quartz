@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Created with",
     },
+    disctrictGraph: {
+      title: "그래프 뷰",
+    },
     graph: {
       title: "그래프 뷰",
     },

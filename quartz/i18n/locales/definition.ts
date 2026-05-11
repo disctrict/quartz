@@ -41,6 +41,9 @@ export interface Translation {
     footer: {
       createdWith: string
     }
+    disctrictGraph: {
+      title: string
+    }
     graph: {
       title: string
     }

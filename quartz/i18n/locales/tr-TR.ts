@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Şununla oluşturuldu",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Grafik Görünümü",
     },

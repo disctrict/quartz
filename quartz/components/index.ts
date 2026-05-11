@@ -13,6 +13,7 @@ import TableOfContents from "./TableOfContents"
 import Explorer from "./Explorer"
 import TagList from "./TagList"
 import Graph from "./Graph"
+import DisctrictGraph from "./DisctrictGraph"
 import Backlinks from "./Backlinks"
 import Search from "./Search"
 import Footer from "./Footer"
@@ -39,6 +40,7 @@ export {
   Explorer,
   TagList,
   Graph,
+  DisctrictGraph,
   Backlinks,
   Search,
   Footer,

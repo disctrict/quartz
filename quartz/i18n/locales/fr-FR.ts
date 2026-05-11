@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Créé avec",
     },
+    disctrictGraph: {
+      title: "Disctrict Graphique",
+    },
     graph: {
       title: "Vue Graphique",
     },

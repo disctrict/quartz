@@ -39,6 +39,9 @@ export default {
     footer: {
       createdWith: "נוצר באמצעות",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "מבט גרף",
     },

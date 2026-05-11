@@ -38,6 +38,9 @@ export default {
     footer: {
       createdWith: "Laget med",
     },
+    disctrictGraph: {
+      title: "",
+    },
     graph: {
       title: "Graf-visning",
     },
