@@ -100,6 +100,7 @@ async function mouseEnterHandler(
       if (elts.length === 0) return
 
       elts.forEach((elt) => popoverInner.appendChild(elt))
+      popoverInner.querySelectorAll(".popover-exclude").forEach(el => el.remove());
   }
 
   if (!!document.getElementById(popoverId)) {

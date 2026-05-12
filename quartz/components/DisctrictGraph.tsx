@@ -48,7 +48,7 @@ export default ((opts?: Partial<GraphOptions>) => {
   const DisctrictGraph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const disctrictGraph = { ...defaultOptions.disctrictGraph, ...opts?.disctrictGraph }
     return (
-      <div class={classNames(displayClass, "disctrict-graph", "popover-hint")}>
+      <div class={classNames(displayClass, "disctrict-graph", "popover-exclude")}>
         <h3>{i18n(cfg.locale).components.disctrictGraph.title}</h3>
         <div class="disctrict-graph-outer">
           <div class="disctrict-graph-container" data-cfg={JSON.stringify(disctrictGraph)}></div>
