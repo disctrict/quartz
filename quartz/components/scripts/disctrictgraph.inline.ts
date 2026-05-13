@@ -14,7 +14,7 @@ import {
   drag,
   zoom,
 } from "d3"
-import { Text, Graphics, Application, Container, Circle } from "pixi.js"
+import { Text, Graphics, Application, Container, Circle, Assets } from "pixi.js"
 import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
 import { registerEscapeHandler, removeAllChildren } from "./util"
 import { FullSlug, SimpleSlug, getFullSlug, resolveRelative, simplifySlug } from "../../util/path"
@@ -53,6 +53,7 @@ type NodeRenderData = GraphicsInfo & {
 }
 
 const disctrictStorageKey = "disctrict-graph-visited"
+
 function getVisited(): Set<SimpleSlug> {
   return new Set(JSON.parse(localStorage.getItem(disctrictStorageKey) ?? "[]"))
 }
@@ -88,6 +89,10 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     focusOnHover,
     enableRadial,
   } = JSON.parse(graph.dataset["cfg"]!) as D3Config
+
+  if ( slug === "/" ) {
+    depth = -1
+  }
 
   const data: Map<SimpleSlug, ContentDetails> = new Map(
     Object.entries<ContentDetails>(await fetchData).map(([k, v]) => [
@@ -423,30 +428,62 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     label.scale.set(1 / scale)
 
     let oldLabelOpacity = 0
+    let gfx 
     const isTagNode = nodeId.startsWith("tags/")
-    const gfx = new Graphics({
-      interactive: true,
-      label: nodeId,
-      eventMode: "static",
-      hitArea: new Circle(0, 0, nodeRadius(n)),
-      cursor: "pointer",
-    })
-      .circle(0, 0, nodeRadius(n))
-      .fill({ color: isTagNode ? computedStyleMap["--light"] : color(n) })
-      .on("pointerover", (e) => {
-        updateHoverInfo(e.target.label)
-        oldLabelOpacity = label.alpha
-        if (!dragging) {
-          renderPixiFromD3()
-        }
+
+    if (slug !== nodeId) {
+      gfx = new Graphics({
+        interactive: true,
+        label: nodeId,
+        eventMode: "static",
+        hitArea: new Circle(0, 0, nodeRadius(n)),
+        cursor: "pointer",
       })
-      .on("pointerleave", () => {
-        updateHoverInfo(null)
-        label.alpha = oldLabelOpacity
-        if (!dragging) {
-          renderPixiFromD3()
-        }
+        .circle(0, 0, nodeRadius(n))
+        .fill({ color: isTagNode ? computedStyleMap["--light"] : color(n) })
+        .on("pointerover", (e) => {
+          updateHoverInfo(e.target.label)
+          oldLabelOpacity = label.alpha
+          if (!dragging) {
+            renderPixiFromD3()
+          }
+        })
+        .on("pointerleave", () => {
+          updateHoverInfo(null)
+          label.alpha = oldLabelOpacity
+          if (!dragging) {
+            renderPixiFromD3()
+          }
+        })
+    } else {
+      const svgContext = await Assets.load({
+        src: '/static/disctrict.svg', 
+        data: {
+          parseAsGraphicsContext: true,
+        } 
       })
+
+      gfx = new Graphics(svgContext)
+        .fill({ color: isTagNode ? computedStyleMap["--light"] : color(n) })
+        .on("pointerover", (e) => {
+          updateHoverInfo(e.target.label)
+          oldLabelOpacity = label.alpha
+          if (!dragging) {
+            renderPixiFromD3()
+          }
+        })
+        .on("pointerleave", () => {
+          updateHoverInfo(null)
+          label.alpha = oldLabelOpacity
+          if (!dragging) {
+            renderPixiFromD3()
+          }
+        })
+
+      const bounds = gfx.getLocalBounds();
+      gfx.pivot.set((bounds.x + bounds.width) / 2 + 5, (bounds.y + bounds.height));
+      gfx.scale.set(.1)
+    }
 
     if (isTagNode) {
       gfx.stroke({ width: 2, color: computedStyleMap["--tertiary"] })
@@ -516,15 +553,19 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
           if (Date.now() - dragStartTime < 500) {
             const node = graphData.nodes.find((n) => n.id === event.subject.id) as NodeData
             const targ = resolveRelative(fullSlug, node.id)
-            window.spaNavigate(new URL(targ, window.location.toString()))
+            if (slug !== node.id) {
+              window.spaNavigate(new URL(targ, window.location.toString()))
+			}
           }
         }),
     )
   } else {
     for (const node of nodeRenderData) {
       node.gfx.on("click", () => {
-        const targ = resolveRelative(fullSlug, node.simulationData.id)
-        window.spaNavigate(new URL(targ, window.location.toString()))
+        if (slug !== node.simulationData.id) {
+          const targ = resolveRelative(fullSlug, node.simulationData.id)
+          window.spaNavigate(new URL(targ, window.location.toString()))
+        }
       })
     }
   }
@@ -564,7 +605,11 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
       if (!x || !y) continue
       n.gfx.position.set(x + width / 2, y + height / 2)
       if (n.label) {
-        n.label.position.set(x + width / 2, y + height / 2)
+        if (slug === n.simulationData.id) {
+          n.label.position.set(x + width / 2, y + height / 2 + 12)
+        } else {
+          n.label.position.set(x + width / 2, y + height / 2)
+        }
       }
     }
 
