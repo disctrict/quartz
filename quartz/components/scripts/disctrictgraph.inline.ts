@@ -1,4 +1,4 @@
-import type { ContentDetails } from "../../plugins/emitters/contentIndex"
+import type { DisctrictGraphDetails } from "../../plugins/emitters/disctrictGraphData"
 import {
   SimulationNodeDatum,
   SimulationLinkDatum,
@@ -22,6 +22,7 @@ import { D3Config } from "../DisctrictGraph"
 import SlimSelect from 'slim-select'
 import Graph from 'graphology'
 import {bidirectional} from 'graphology-shortest-path'
+
 
 type GraphicsInfo = {
   color: string
@@ -587,7 +588,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     linkDistance,
     fontSize,
     opacityScale,
-    removeTags,
     showTags,
     focusOnHover,
   } = JSON.parse(graph.dataset["cfg"]!) as D3Config
@@ -596,8 +596,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     depth = -1
   }
 
-  const data: Map<SimpleSlug, ContentDetails> = new Map(
-    Object.entries<ContentDetails>(await fetchData).map(([k, v]) => [
+  const data: Map<SimpleSlug, DisctrictGraphDetails> = new Map(
+    Object.entries<DisctrictGraphDetails>(await fetchDisctrictGraphData).map(([k, v]) => [
       simplifySlug(k as FullSlug),
       v,
     ]),
@@ -619,18 +619,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
         travelGraph.mergeNode(dest)
         travelGraph.mergeEdge(source, dest)
         travelGraph.mergeEdge(dest, source)
-      }
-    }
-
-    if (showTags) {
-      const localTags = details.tags
-        .filter((tag) => !removeTags.includes(tag))
-        .map((tag) => simplifySlug(("tags/" + tag) as FullSlug))
-
-      tags.push(...localTags.filter((tag) => !tags.includes(tag)))
-
-      for (const tag of localTags) {
-        links.push({ source: source, target: tag })
       }
     }
   }
@@ -770,8 +758,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     for (const l of linkRenderData) {
       let alpha = 1
 
-      // if we are hovering over a node, we want to highlight the immediate neighbours
-      // with full alpha and the rest with default alpha
       if (hoveredNodeId) {
         alpha = l.active ? 1 : 0.2
       }

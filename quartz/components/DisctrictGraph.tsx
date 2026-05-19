@@ -19,11 +19,11 @@ export interface D3Config {
   initialScale?: number
 }
 
-interface GraphOptions {
+interface DisctrictGraphOptions {
   disctrictGraph: Partial<D3Config> | undefined
 }
 
-const defaultOptions: GraphOptions = {
+const defaultOptions: DisctrictGraphOptions = {
   disctrictGraph: {
     depth: 2,
     scale: 1.1,
@@ -39,7 +39,7 @@ const defaultOptions: GraphOptions = {
   },
 }
 
-export default ((opts?: Partial<GraphOptions>) => {
+export default ((opts?: Partial<DisctrictGraphOptions>) => {
   const DisctrictGraph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const disctrictGraph = { ...defaultOptions.disctrictGraph, ...opts?.disctrictGraph }
     return (

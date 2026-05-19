@@ -13,3 +13,6 @@ interface CustomEventMap {
 
 type ContentIndex = Record<FullSlug, ContentDetails>
 declare const fetchData: Promise<ContentIndex>
+
+type DisctrictGraphData = Record<FullSlug, DisctrictGraphDetails>
+declare const fetchDisctrictGraphData: Promise<DisctrictGraphData>
