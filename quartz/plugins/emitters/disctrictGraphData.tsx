@@ -52,7 +52,7 @@ export const DisctrictGraphData: QuartzEmitterPlugin<Partial<Options>> = (opts) 
         if (opts?.includeEmptyFiles || (file.data.text && file.data.text !== "")) {
           linkIndex.set(slug, {
             slug,
-            title: slug.toString().split("/")[1],
+            title: file.data.frontmatter?.title!,
             nodeType: slug.toString().split("/")[0],
             links: file.data.disctrictGraphLinks ?? [],
           })
