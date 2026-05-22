@@ -2,7 +2,6 @@ import { QuartzComponent, QuartzComponentConstructor, QuartzComponentProps } fro
 // @ts-ignore
 import script from "./scripts/disctrict_tools_wrapper.inline"
 import style from "./styles/disctrict.scss"
-import { i18n } from "../i18n"
 import { classNames } from "../util/lang"
 
 export interface D3Config {
@@ -43,12 +42,14 @@ export default ((opts?: Partial<DisctrictGraphOptions>) => {
   const DisctrictGraph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
     const disctrictGraph = { ...defaultOptions.disctrictGraph, ...opts?.disctrictGraph }
     return (
-      <div class={classNames(displayClass, "disctrict-graph", "popover-exclude")}>
-        <div class="disctrict-graph-controls">
-          <div class="disctrict-global-graph-controls">
+      <div class={classNames(displayClass, "disctrict", "popover-exclude")}>
+        <div class="disctrict-popout-wrapper">
+          <div class="disctrict-graph-controls">
+            <div class="disctrict-global-graph-controls">
+            </div>
           </div>
+          <div class="disctrict-graph-outer" data-cfg={JSON.stringify(disctrictGraph)}></div>
         </div>
-        <div class="disctrict-graph-outer" data-cfg={JSON.stringify(disctrictGraph)}></div>
       </div>
     )
   }

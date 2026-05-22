@@ -342,8 +342,8 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   const app = new Application()
   await app.init({
-    width,
-    height,
+    width: screen.width,
+    height:screen.height,
     antialias: true,
     autoStart: false,
     autoDensity: true,
