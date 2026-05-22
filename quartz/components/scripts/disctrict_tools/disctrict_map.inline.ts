@@ -1,7 +1,5 @@
-import type { DisctrictGraphDetails } from "../../plugins/emitters/disctrictGraphData"
+import type { DisctrictGraphDetails } from "../../../plugins/emitters/disctrictGraphData"
 import {
-  SimulationNodeDatum,
-  SimulationLinkDatum,
   Simulation,
   forceSimulation,
   forceManyBody,
@@ -16,88 +14,24 @@ import {
 } from "d3"
 import { Text, Graphics, Application, Container, Circle, Assets, TextStyle } from "pixi.js"
 import { Group as TweenGroup, Tween as Tweened } from "@tweenjs/tween.js"
-import { removeAllChildren } from "./util"
-import { FullSlug, SimpleSlug, resolveRelative, simplifySlug } from "../../util/path"
-import { D3Config } from "../DisctrictGraph"
+import { removeAllChildren } from "../util"
+import { FullSlug, SimpleSlug, resolveRelative, simplifySlug } from "../../../util/path"
+import { D3Config } from "../../Disctrict"
 import SlimSelect from 'slim-select'
 import Graph from 'graphology'
 import {bidirectional} from 'graphology-shortest-path'
+import { 
+  SimpleLinkData, 
+  NodeData, 
+  TweenNode, 
+  LinkRenderData, 
+  NodeRenderData, 
+  LinkData, 
+  computedStyleMap,
+  getVisited,
+  addToVisited
+ } from "./disctrict_utils"
 
-
-type GraphicsInfo = {
-  color: string
-  gfx: Graphics
-  alpha: number
-  active: boolean
-}
-
-type NodeData = {
-  id: SimpleSlug
-  text: string
-  tags: string[]
-} & SimulationNodeDatum
-
-type SimpleLinkData = {
-  source: SimpleSlug
-  target: SimpleSlug
-}
-
-type LinkData = {
-  source: NodeData
-  target: NodeData
-} & SimulationLinkDatum<NodeData>
-
-type LinkRenderData = GraphicsInfo & {
-  simulationData: LinkData
-}
-
-type NodeRenderData = GraphicsInfo & {
-  simulationData: NodeData
-  label: Text
-}
-
-type TweenNode = {
-  update: (time: number) => void
-  stop: () => void
-}
-
-  // precompute style prop strings as pixi doesn't support css variables
-const cssVars = [
-  "--secondary",
-  "--tertiary",
-  "--gray",
-  "--light",
-  "--lightgray",
-  "--dark",
-  "--darkgray",
-  "--bodyFont",
-  "--root-band",
-  "--band-idle",
-  "--band-active",
-  "--root-musician",
-  "--musician-idle",
-  "--musician-active",
-  "--musician-label",
-] as const
-const computedStyleMap = cssVars.reduce(
-  (acc, key) => {
-    acc[key] = getComputedStyle(document.documentElement).getPropertyValue(key)
-    return acc
-  },
-  {} as Record<(typeof cssVars)[number], string>,
-)
-
-const disctrictStorageKey = "disctrict-graph-visited"
-
-function getVisited(): Set<SimpleSlug> {
-  return new Set(JSON.parse(localStorage.getItem(disctrictStorageKey) ?? "[]"))
-}
-
-function addToVisited(slug: SimpleSlug) {
-  const visited = getVisited()
-  visited.add(slug)
-  localStorage.setItem(disctrictStorageKey, JSON.stringify([...visited]))
-}
 
 async function populateTravelGraph(container:HTMLElement, origin:string[], target:string[]) {
   removeAllChildren(container)
