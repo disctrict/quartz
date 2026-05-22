@@ -1,20 +1,9 @@
 import {
   SimulationNodeDatum,
   SimulationLinkDatum,
-  Simulation,
-  forceSimulation,
-  forceManyBody,
-  forceCenter,
-  forceLink,
-  forceCollide,
-  forceRadial,
-  zoomIdentity,
-  select,
-  drag,
-  zoom,
 } from "d3"
-import { Text, Graphics, Application, Container, Circle, Assets, TextStyle } from "pixi.js"
-import { FullSlug, SimpleSlug, resolveRelative, simplifySlug } from "../../../util/path"
+import { Text, Graphics } from "pixi.js"
+import { SimpleSlug } from "../../../util/path"
 
 export type DisctrictButtonSetup = {
     button: Element | null
