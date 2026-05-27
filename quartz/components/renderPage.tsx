@@ -29,8 +29,10 @@ export function pageResources(
 ): StaticResources {
   const contentIndexPath = joinSegments(baseDir, "static/contentIndex.json")
   const disctrictGraphDataPath = joinSegments(baseDir, "static/disctrictGraphData.json")
+  const disctrictBandLocationDataPath = joinSegments(baseDir, "static/disctrictBandLocationData.json")
   const contentIndexScript = `const fetchData = fetch("${contentIndexPath}").then(data => data.json())`
   const disctrictGraphDataScript = `const fetchDisctrictGraphData = fetch("${disctrictGraphDataPath}").then(data => data.json())`
+  const disctrictGeoCoordinatesScript = `const fetchDisctrictBandLocationData = fetch("${disctrictBandLocationDataPath}").then(data => data.json())`
 
   const resources: StaticResources = {
     css: [
@@ -56,6 +58,12 @@ export function pageResources(
         contentType: "inline",
         spaPreserve: true,
         script: disctrictGraphDataScript,
+      },
+      {
+        loadTime: "beforeDOMReady",
+        contentType: "inline",
+        spaPreserve: true,
+        script: disctrictGeoCoordinatesScript,
       },
       ...staticResources.js,
     ],

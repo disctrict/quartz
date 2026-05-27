@@ -17,21 +17,21 @@ document.addEventListener("nav", async (e: CustomEventMap["nav"]) => {
       DisctrictGraph.prepareUtilityContainer()
       DisctrictJourney.prepareUtilityContainer()
       DisctrictExpand.prepareUtilityContainer()
-      //DisctrictMap.prepareUtilityContainer()
+      DisctrictMap.prepareUtilityContainer()
   }
 
   async function renderTools() {
     DisctrictGraph.renderUtility(slug)
     DisctrictJourney.renderUtility(slug)
     DisctrictExpand.renderUtility(slug)
-    //DisctrictMap.renderUtility(slug)
+    DisctrictMap.renderUtility(slug)
   }
   
   async function cleanupTools() {
     DisctrictGraph.cleanupUtilityContainers()
     DisctrictJourney.cleanupUtilityContainers()
     DisctrictExpand.cleanupUtilityContainers()
-    //DisctrictMap.cleanupUtilityContainers()
+    DisctrictMap.cleanupUtilityContainers()
   }
 
   await prepareContainer()

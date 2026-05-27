@@ -1,3 +1,4 @@
+
 declare module "*.scss" {
   const content: string
   export = content
@@ -16,3 +17,6 @@ declare const fetchData: Promise<ContentIndex>
 
 type DisctrictGraphData = Record<FullSlug, DisctrictGraphDetails>
 declare const fetchDisctrictGraphData: Promise<DisctrictGraphData>
+
+type DisctrictBandLocationData = Record<FullSlug, DisctrictLocationDetails>
+declare const fetchDisctrictBandLocationData: Promise<DisctrictBandLocationData>

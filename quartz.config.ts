@@ -56,6 +56,7 @@ const config: QuartzConfig = {
   plugins: {
     transformers: [
       Plugin.FrontMatter(),
+      Plugin.DisctrictBandLocations(),
       Plugin.CreatedModifiedDate({
         priority: ["frontmatter", "git", "filesystem"],
       }),
@@ -86,6 +87,7 @@ const config: QuartzConfig = {
         enableRSS: true,
       }),
       Plugin.DisctrictGraphData(),
+      Plugin.DisctrictLocationData(),
       Plugin.Assets(),
       Plugin.Static(),
       Plugin.Favicon(),

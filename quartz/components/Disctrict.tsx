@@ -39,7 +39,7 @@ const defaultOptions: DisctrictGraphOptions = {
 }
 
 export default ((opts?: Partial<DisctrictGraphOptions>) => {
-  const DisctrictGraph: QuartzComponent = ({ displayClass, cfg }: QuartzComponentProps) => {
+  const DisctrictGraph: QuartzComponent = ({ displayClass}: QuartzComponentProps) => {
     const disctrictGraph = { ...defaultOptions.disctrictGraph, ...opts?.disctrictGraph }
     return (
       <div class={classNames(displayClass, "disctrict", "popover-exclude")}>
