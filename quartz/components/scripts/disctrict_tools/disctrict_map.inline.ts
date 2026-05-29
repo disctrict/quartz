@@ -20,7 +20,6 @@ import {
  } from "./disctrict_utils"
 import { geoPath, GeoPath, GeoProjection, geoEqualEarth } from 'd3-geo'
 
-
 type LocationData = {
   title: string
   slug: SimpleSlug
@@ -32,14 +31,19 @@ type MapNodeData = {
   latitude: number
   longitude: number
   title: string
-  bands: []
+  bands: BandData[]
 } & NodeData
+
+type BandData = {
+  slug:SimpleSlug,
+  title: string,
+}
 
 let disctrictContainerCleanups: (() => void)[] = []
 
 export async function renderUtility(slug:FullSlug) {
   cleanupUtilityContainers()
-  const disctrictGraphContainers = document.getElementsByClassName("disctrict-map-container")
+  const disctrictGraphContainers = document.querySelectorAll(".disctrict-map-container > .disctrict-map-canvas")
   for (const container of disctrictGraphContainers) {
       disctrictContainerCleanups.push(await renderGraph(container as HTMLElement, slug))
   }
@@ -55,11 +59,17 @@ export function cleanupUtilityContainers() {
 export function prepareUtilityContainer() {
   const outerContainer:HTMLDivElement | null = document.querySelector(".disctrict-graph-outer")
   const controlContainer:HTMLDivElement | null = document.querySelector(".disctrict-global-graph-controls")
+  const mapCanvas:HTMLDivElement = document.createElement('div')
+  const mapSidebar:HTMLDivElement = document.createElement('div')
+  const sidebarTitle:HTMLHeadingElement = document.createElement('h2')
+  const sidebarContent:HTMLDivElement = document.createElement('div')
   const mapContainer:HTMLDivElement = document.createElement('div')
   const icon = document.createElement('div')
   const button = document.createElement('button')
   const svg = document.createElement('svg')
 
+  mapSidebar.classList.add("disctrict-map-sidebar")
+  mapCanvas.classList.add("disctrict-map-canvas")
   mapContainer.classList.add("disctrict-map-container")
   svg.classList.add("disctrict-map-svg")
 
@@ -78,7 +88,11 @@ export function prepareUtilityContainer() {
   })
 
   outerContainer?.appendChild( mapContainer )
-  mapContainer?.appendChild(svg)
+  mapContainer.appendChild(mapSidebar)
+  mapSidebar.appendChild(sidebarTitle)
+  mapSidebar.appendChild(sidebarContent)
+  mapContainer.appendChild(mapCanvas)
+  mapCanvas?.appendChild(svg)
   controlContainer?.appendChild( button )
 }
 
@@ -120,7 +134,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     } as MapNodeData)
   })
 
-  const graphData: { nodes: MapNodeData[] } = {
+  const mapData: { nodes: MapNodeData[] } = {
     nodes,
   }
 
@@ -161,7 +175,6 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   }
 
   let hoveredNodeId: string | null = null
-  let hoveredNeighbours: Set<string> = new Set()
 
   const nodeRenderData: NodeRenderData[] = []
 
@@ -169,18 +182,18 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     hoveredNodeId = newHoveredId
 
     if (newHoveredId === null) {
-      hoveredNeighbours = new Set()
       for (const n of nodeRenderData) {
         n.active = false
       }
     } else {
-      hoveredNeighbours = new Set()
       for (const n of nodeRenderData) {
-        n.active = hoveredNeighbours.has(n.simulationData.id)
+        if (newHoveredId === n.simulationData.id) {
+          n.active = true
+        }
       }
     }
   }
-
+  
   let dragStartTime = 0
   let dragging = false
 
@@ -247,11 +260,11 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
     .scale(150)
     .translate([width / 2, height / 2]);
 
-  const labelsContainer = new Container<Text>({ zIndex: 3, isRenderGroup: true })
-  const nodesContainer  = new Container<Graphics>({ zIndex: 2, isRenderGroup: true })
-  const mapContainer = new Container<Graphics>({ zIndex: 1, isRenderGroup: true })
+  const labelsContainer   = new Container<Text>({ zIndex: 3, isRenderGroup: true })
+  const nodesContainer    = new Container<Graphics>({ zIndex: 2, isRenderGroup: true })
+  const mapContainer      = new Container<Graphics>({ zIndex: 1, isRenderGroup: true })
 
-  const pathGenerator: GeoPath = geoPath().projection(projection);
+  const pathGenerator:GeoPath = geoPath().projection(projection);
   const svg = document.createElement("svg")
   const svgSelection = select(svg)
     .attr("width", width)
@@ -279,7 +292,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   await drawMap();
 
-  const svgContext = new GraphicsContext().svg(svg)
+  const svgContext = new GraphicsContext().svg(svg.outerHTML)
   const mapGraphics = new Graphics(svgContext)
 
   mapContainer.addChild(mapGraphics)
@@ -287,7 +300,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   const app = new Application()
   await app.init({
     width: screen.width,
-    height:screen.height,
+    height: screen.height,
     antialias: true,
     autoStart: false,
     autoDensity: true,
@@ -300,19 +313,15 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
   const stage = app.stage
   stage.interactive = false
+  
   stage.addChild(mapContainer, nodesContainer, labelsContainer)
 
-  for (const n of graphData.nodes) {
+
+  for (const n of mapData.nodes) {
     const nodeId = n.id
     const targetAlpha = .85
-
-    let textColor = computedStyleMap["--dark"]
-
-    if (nodeId.toLowerCase().startsWith("musicians/")) {
-        textColor = computedStyleMap["--musician-label"]
-    }
-
     const [x, y] = projection([n.longitude,n.latitude]) ?? [0,0]
+    
     const label = new Text({
       interactive: false,
       eventMode: "none",
@@ -383,7 +392,7 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
   select<HTMLCanvasElement, MapNodeData | undefined>(app.canvas).call(
     drag<HTMLCanvasElement, MapNodeData | undefined>()
       .container(() => app.canvas)
-      .subject(() => graphData.nodes.find((n) => n.id === hoveredNodeId))
+      .subject(() => mapData.nodes.find((n) => n.id === hoveredNodeId))
       .on("start", function dragstarted(event) {
         event.subject.fx = event.subject.x
         event.subject.fy = event.subject.y
@@ -408,10 +417,37 @@ async function renderGraph(graph: HTMLElement, fullSlug: FullSlug) {
 
         // if the time between mousedown and mouseup is short, we consider it a click
         if (Date.now() - dragStartTime < 500) {
-          const node = graphData.nodes.find((n) => n.id === event.subject.id) as MapNodeData
-          const targ = resolveRelative(fullSlug, node.id)
-          if (slug !== node.id) {
-            //window.spaNavigate(new URL(targ, window.location.toString()))
+          const node = mapData.nodes.find((n) => n.id === event.subject.id) as MapNodeData
+          const sidebar = document.querySelector(".disctrict-map-sidebar")
+          const title = sidebar?.querySelector("h2")
+          const body  = sidebar?.querySelector("div")
+
+          if (sidebar?.classList.contains("active")) {
+            sidebar?.classList.remove("active")
+            body?.replaceChildren() 
+          }
+
+          if (title !== null && title !== undefined) {
+            if ( title.textContent !== node.title) {
+              title.textContent = node.title
+              sidebar?.classList.add("active")
+              if (slug !== node.id) {
+                node.bands.forEach( (value) => {
+                  const list:HTMLLIElement = document.createElement('li')
+                  const link: HTMLAnchorElement = document.createElement('a')
+
+                  link.href = resolveRelative(fullSlug, value.slug)
+                  link.textContent = value.title
+
+                  list.appendChild(link)
+
+                  body?.appendChild(list);
+                })
+
+              }
+            } else {
+              title.textContent = ""
+            }
           }
         }
       }),

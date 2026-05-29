@@ -167,7 +167,49 @@ blockquote.touringmembers > div.callout-title > div.callout-icon {
     }
   }
 
+  .disctrict-map-container {
+    display: flex;
+    flex-direction: row;
+  
+    & > .disctrict-map-sidebar {
+      background-color: #000000;
+      height:inherit;
+      max-width:0px;
+      transition: all 0.5s ease-in-out;
 
+      & > div > li {
+        margin-left: 5px;
+        padding: 2px 5px 0px 5px;
+        text-wrap: nowrap;
+      }
+
+      & > h2 {
+        text-align: center;
+        font-size: large;
+        text-wrap: nowrap;
+        margin-top: -.1em;
+        padding: 0 .3em 0 .3em;
+      }
+
+      & > h2::after {
+        content: "";       /* Necessary for visibility */
+        display: block;    /* Moves it to a new line */
+        width: 100%;
+        height: 2px;
+        background: rgb(217, 217, 217);
+        margin-top: 10px;
+      }
+    }
+
+    & > .disctrict-map-sidebar.active {
+      max-width:1000px;
+    }
+
+    & > .disctrict-map-canvas {
+      flex:1;
+      position:static;
+    }
+  }
 }
 
 .disctrict-hidden {
